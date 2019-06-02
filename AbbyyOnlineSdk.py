@@ -40,8 +40,8 @@ class AbbyyOnlineSdk:
 	# register at https://cloud.ocrsdk.com/Account/Register
 	# More info on getting your application id and password at
 	# https://ocrsdk.com/documentation/faq/#faq3
-	ApplicationId = " Sistema de Triagem"
-	Password = "jfIiA4oieQyJWKyJnEAywBI3"
+	ApplicationId = "user"
+	Password = "password"
 	Proxies = {}
 
 	def process_image(self, file_path, settings):

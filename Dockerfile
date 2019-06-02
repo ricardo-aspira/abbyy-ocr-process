@@ -7,8 +7,12 @@ RUN apt-get update
 
 WORKDIR /usr/app
 
+RUN mkdir /usr/app/output
+
 ADD requirements.txt ./
 RUN pip install -r requirements.txt
+
+RUN mkdir
 
 ADD ./* ./
 

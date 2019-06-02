@@ -11,6 +11,11 @@ from AbbyyOnlineSdk import *
 processor = None
 
 def setup_processor():
+
+	if "ABBYY_SERVER_URL" in os.environ:
+		processor.ServerUrl = os.environ["ABBYY_SERVER_URL"]
+		print("processor.ServerUrl=" + processor.ServerUrl)
+
 	if "ABBYY_APPID" in os.environ:
 		processor.ApplicationId = os.environ["ABBYY_APPID"]
 		print("processor.ApplicationId=" + processor.ApplicationId)
@@ -18,8 +23,6 @@ def setup_processor():
 	if "ABBYY_PWD" in os.environ:
 		processor.Password = os.environ["ABBYY_PWD"]
 		print("processor.Password=" + processor.Password)
-
-	raise Exception("Teste")
 
 	# Proxy settings
 	if "http_proxy" in os.environ:
@@ -81,15 +84,23 @@ def create_parser():
 	parser.add_argument('target_file')
 
 	parser.add_argument('-l', '--language', default='English', help='Recognition language (default: %(default)s)')
+
 	group = parser.add_mutually_exclusive_group()
 	group.add_argument('-txt', action='store_const', const='txt', dest='format', default='txt')
-	group.add_argument('-pdf', action='store_const', const='pdfSearchable', dest='format')
+	group.add_argument('-txtUnstructured', action='store_const', const='txtUnstructured', dest='format')
 	group.add_argument('-rtf', action='store_const', const='rtf', dest='format')
 	group.add_argument('-docx', action='store_const', const='docx', dest='format')
+	group.add_argument('-xlsx', action='store_const', const='xlsx', dest='format')
+	group.add_argument('-pptx', action='store_const', const='pptx', dest='format')
+	group.add_argument('-pdfSearchable', action='store_const', const='pdfSearchable', dest='format')
+	group.add_argument('-pdfa', action='store_const', const='pdfa', dest='format')
+	group.add_argument('-pdfTextAndImages', action='store_const', const='pdfTextAndImages', dest='format')
 	group.add_argument('-xml', action='store_const', const='xml', dest='format')
+	group.add_argument('-xmlForCorrectedImage', action='store_const', const='xmlForCorrectedImage', dest='format')
+	group.add_argument('-auto', action='store_const', const='auto', dest='format')
 
 	return parser
-
+	
 
 def main():
 	global processor
