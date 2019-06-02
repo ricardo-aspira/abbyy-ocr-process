@@ -1,1 +1,6 @@
 Dockerfile
+input/**
+output/**
+README.md
+LICENSE
+.DS_Store
