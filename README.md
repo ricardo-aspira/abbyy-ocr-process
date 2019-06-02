@@ -35,22 +35,27 @@ export ABBYY_PWD="<YOUR_APPLICATION_PASSWORD>"
 
 ## Python Code Arguments
 
-The python code that is wrapped into this container needs the following mandatory arguments (<font style='color:red'>*They have to be sent in this order*</font>):<br/>
+The python code that is wrapped into this container needs the following mandatory arguments (<font style='color:red'>*They have to be sent in this order*</font>):
+
 | Argument | Description | 
-|---|---|
+| --- | --- |
 | source_file | The source file that will be uploaded to the cloud and will be processed by OCR tool. |
 | target_file | The target file that will be processed into the cloud and will be downloaded to your workstation. |
 
-The target file should be the output file name only since the code writes the file inside the container in the directory **/usr/app/output** that is mapped to your host by the **docker run** command bellow.
+The source file should be the input file name only because the code reads the file from the container directory **/usr/app/input**, that is mapped to your host by the **docker run** command bellow.
+
+The target file should be the output file name only because the code writes the file inside the container, **/usr/app/output**, that is mapped to your host by the **docker run** command bellow.
 
 Also there are optional arguments that can be sent with shortcut letters, as follows:
+
 | Optional Argument | Description | 
-|---|---|
+| --- | --- |
 | -l<br/>or<br/>--language | Specifies the recognition language. *Default: English*<br/>[Supported languages](https://www.ocrsdk.com/documentation/specifications/recognition-languages) |
 
 The following arguments represent a mutual exclusive group and just one of them can be used, and in fact, must be used for processing the OCR request.
+
 | Optional Argument | Description | 
-|---|---|
+| --- | --- |
 | -txt<br/><br/>*This is DEFAULT.*| The recognized text is exported to the file line by line from left to right. E.g. if the text was originally put in columns, the first lines of every column will be saved, then the second lines, etc.<br/>Please take into account the fact that in this format only text will be saved. No images or barcodes will remain in the output file. If you want to save the barcode recognition results in the exported file, use the txtUnstructured format. |
 | -txtUnstructured | The exported file contains the text that was saved according to the order of the original blocks. |
 | -rtf | Exports the result into **RTF** format. |
@@ -71,6 +76,14 @@ You must have set your environment variables before starting the container.
 The following example, code below is for Linux, submits a PDF and request its return to be a XML called `result.xml`.
 
 Run the following:
-```bash
-docker run ricardosouzamorais/abbyy-process-image
+    ```bash
+        docker run -e ABBYY_SERVER_URL="$ABBYY_SERVER_URL" \
+        -e ABBYY_APPID="$ABBYY_APPID" \
+        -e ABBYY_PWD="$ABBYY_PWD" \
+        -v $(pwd)/input:/usr/app/input \
+        -v $(pwd)/output:/usr/app/output \
+        ricardosouzamorais/abbyy-process-image \
+        -l "Portuguese (Brazil)" -xml \
+        "03.pdf" \
+        "03_result.xml"
 ```

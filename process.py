@@ -37,7 +37,11 @@ def setup_processor():
 
 
 # Recognize a file at filePath and save result to resultFilePath
-def recognize_file(file_path, result_file_path, language, output_format):
+def recognize_file(file_path, result_file_path, language, input_dir, output_dir, output_format):
+	
+	file_path = os.path.join(input_dir, file_path)
+	result_file_path = os.path.join(output_dir, result_file_path)
+	
 	print("Uploading..")
 	settings = ProcessingSettings()
 	settings.Language = language
@@ -84,7 +88,7 @@ def create_parser():
 	parser.add_argument('target_file')
 
 	parser.add_argument('-l', '--language', default='English', help='Recognition language (default: %(default)s)')
-
+	
 	group = parser.add_mutually_exclusive_group()
 	group.add_argument('-txt', action='store_const', const='txt', dest='format', default='txt')
 	group.add_argument('-txtUnstructured', action='store_const', const='txtUnstructured', dest='format')
@@ -100,7 +104,7 @@ def create_parser():
 	group.add_argument('-auto', action='store_const', const='auto', dest='format')
 
 	return parser
-	
+
 
 def main():
 	global processor
@@ -115,8 +119,18 @@ def main():
 	language = args.language
 	output_format = args.format
 
+	input_dir  = './input'
+	output_dir = './output'
+
+	if '/' in source_file:
+		raise Exception("The source_file should be a file name only and not a path. This file will be read from input folder inside the container that should be mapped to a folder of host.")
+
+	if '/' in target_file:
+		raise Exception("The target_file should be a file name only and not a path. This file will be saved into output folder inside the container that should be mapped to a folder of host.")
+
 	if os.path.isfile(source_file):
-		recognize_file(source_file, target_file, language, output_format)
+		recognize_file(source_file, target_file, language, \
+					input_dir, output_dir, output_format)
 	else:
 		print("No such file: {}".format(source_file))
 
