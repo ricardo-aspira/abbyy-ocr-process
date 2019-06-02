@@ -73,9 +73,10 @@ The following arguments represent a mutual exclusive group and just one of them 
 
 You must have set your environment variables before starting the container.
 
-The following example, code below is for Linux, submits a PDF and request its return to be a XML called `result.xml`.
+The following example, code below is for Linux, submits a PDF and request its return to be a **XLSX** called `03_result.xslx` using **Brazilian Portuguese** as the recognition language.
 
 Run the following:
+
     ```bash
         docker run -e ABBYY_SERVER_URL="$ABBYY_SERVER_URL" \
         -e ABBYY_APPID="$ABBYY_APPID" \
@@ -83,7 +84,7 @@ Run the following:
         -v $(pwd)/input:/usr/app/input \
         -v $(pwd)/output:/usr/app/output \
         ricardosouzamorais/abbyy-process-image \
-        -l "Portuguese (Brazil)" -xml \
+        -l "PortugueseBrazilian" -xlsx \
         "03.pdf" \
-        "03_result.xml"
+        "03_result.xlsx"
 ```
