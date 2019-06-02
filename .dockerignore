@@ -1,6 +1,8 @@
 Dockerfile
-input/**
-output/**
+input/**/*
+output/**/*
 README.md
 LICENSE
 .DS_Store
+.gitignore
+.dockerignore
