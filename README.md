@@ -59,7 +59,6 @@ The following arguments represent a mutual exclusive group and just one of them 
 | -pdfTextAndImages | The recognized text is saved as text, and the pictures are saved as pictures. |
 | -xml | Exports the result into **XML** format. |
 | <nobr>-xmlForCorrectedImage</nobr> | The same as xml, but all coordinates written into the output **XML** file relate to the corrected image, not the original. |
-| -auto | Automatically choosen by platform. |
 
 ## Calling example output as XSLX
 
