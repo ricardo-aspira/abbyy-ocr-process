@@ -16,7 +16,10 @@ After creating your account, create an application and save its name. A password
 
 # Building the Image
 After cloning this repository, being on the main folder, run:<br/>
-`docker build -t abbyy-process-image .`
+
+```bash
+docker build -t abbyy-process-image .
+```
 
 # Running the Image
 
@@ -35,18 +38,7 @@ export ABBYY_PWD="<YOUR_APPLICATION_PASSWORD>"
 
 ## Python Code Arguments
 
-The python code that is wrapped into this container needs the following mandatory arguments (<font style='color:red'>*They have to be sent in this order*</font>):
-
-| Argument | Description | 
-| --- | --- |
-| source_file | The source file that will be uploaded to the cloud and will be processed by OCR tool. |
-| target_file | The target file that will be processed into the cloud and will be downloaded to your workstation. |
-
-The source file should be the input file name only because the code reads the file from the container directory **/usr/app/input**, that is mapped to your host by the **docker run** command bellow.
-
-The target file should be the output file name only because the code writes the file inside the container, **/usr/app/output**, that is mapped to your host by the **docker run** command bellow.
-
-Also there are optional arguments that can be sent with shortcut letters, as follows:
+There are optional arguments that can be sent with shortcut letters, as follows:
 
 | Optional Argument | Description | 
 | --- | --- |
@@ -73,18 +65,16 @@ The following arguments represent a mutual exclusive group and just one of them 
 
 You must have set your environment variables before starting the container.
 
-The following example, code below is for Linux, submits a PDF and request its return to be a **XLSX** called `03_result.xslx` using **Brazilian Portuguese** as the recognition language.
+The following example, code below is for Linux, submits all files inside input folder, of host that is mapped to container, and request its return to be a **XLSX** using **Brazilian Portuguese** as the recognition language.
 
 Run the following:
 
-    ```bash
-        docker run -e ABBYY_SERVER_URL="$ABBYY_SERVER_URL" \
-        -e ABBYY_APPID="$ABBYY_APPID" \
-        -e ABBYY_PWD="$ABBYY_PWD" \
-        -v $(pwd)/input:/usr/app/input \
-        -v $(pwd)/output:/usr/app/output \
-        ricardosouzamorais/abbyy-process-image \
-        -l "PortugueseBrazilian" -xlsx \
-        "03.pdf" \
-        "03_result.xlsx"
+```bash
+docker run -e ABBYY_SERVER_URL="$ABBYY_SERVER_URL" \
+            -e ABBYY_APPID="$ABBYY_APPID" \
+            -e ABBYY_PWD="$ABBYY_PWD" \
+            -v $(pwd)/input:/usr/app/input \
+            -v $(pwd)/output:/usr/app/output \
+            ricardosouzamorais/abbyy-process-image \
+            -l "PortugueseBrazilian" -xlsx
 ```

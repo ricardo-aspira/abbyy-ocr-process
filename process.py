@@ -10,6 +10,19 @@ from AbbyyOnlineSdk import *
 
 processor = None
 
+format_extension = {}
+format_extension['docx'] = 'docx'
+format_extension['pdfa'] = 'pdf'
+format_extension['pdfTextAndImages'] = 'pdf'
+format_extension['pdfSearchable'] = 'pdf'
+format_extension['pptx'] = 'pptx'
+format_extension['rtf'] = 'rtf'
+format_extension['txt'] = 'txt'
+format_extension['txtUnstructured'] = 'txt'
+format_extension['xlsx'] = 'xlsx'
+format_extension['xml'] = 'xml'
+format_extension['xmlForCorrectedImage'] = 'xml'
+
 def setup_processor():
 
 	if "ABBYY_SERVER_URL" in os.environ:
@@ -81,8 +94,6 @@ def recognize_file(file_path, result_file_path, language, output_format):
 
 def create_parser():
 	parser = argparse.ArgumentParser(description="Recognize a file via web service")
-	parser.add_argument('source_file')
-	parser.add_argument('target_file')
 
 	parser.add_argument('-l', '--language', default='English', help='Recognition language (default: %(default)s)')
 	
@@ -109,26 +120,28 @@ def main():
 
 	setup_processor()
 
-	args = create_parser().parse_args()
-
-	source_file = args.source_file
-	target_file = args.target_file
-	language = args.language
+	args          = create_parser().parse_args()
+	language      = args.language
 	output_format = args.format
+	input_folder  = os.path.join(os.getcwd(), 'input')
+	output_folder = os.path.join(os.getcwd(), 'output')
 
-	if '/' in source_file:
-		raise Exception("The source_file should be a file name only and not a path. This file will be read from input folder inside the container that should be mapped to a folder of host.")
+	for root, dirs, files in os.walk(input_folder):
+		for file in files:
+			nome_arquivo_saida = os.path.splitext(file)[0]
+			if nome_arquivo_saida.startswith('.'):
+				continue
 
-	if '/' in target_file:
-		raise Exception("The target_file should be a file name only and not a path. This file will be saved into output folder inside the container that should be mapped to a folder of host.")
+			caminho_arquivo_entrada = os.path.join(input_folder, file)
+			caminho_arquivo_saida   = os.path.join(output_folder, \
+										'.'.join((nome_arquivo_saida, format_extension[output_format])))
+			print(caminho_arquivo_entrada)
+			print(caminho_arquivo_saida)
 
-	source_file = os.path.join('./input', source_file)
-	target_file = os.path.join('./output', target_file)
-
-	if os.path.isfile(source_file):
-		recognize_file(source_file, target_file, language, output_format)
-	else:
-		print("No such file: {}".format(source_file))
+			if os.path.isfile(caminho_arquivo_entrada):
+				recognize_file(caminho_arquivo_entrada, caminho_arquivo_saida, language, output_format)
+			else:
+				print("No such file: {}".format(source_file))
 
 
 if __name__ == "__main__":
