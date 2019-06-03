@@ -61,7 +61,7 @@ The following arguments represent a mutual exclusive group and just one of them 
 | <nobr>-xmlForCorrectedImage</nobr> | The same as xml, but all coordinates written into the output **XML** file relate to the corrected image, not the original. |
 | -auto | Automatically choosen by platform. |
 
-## Calling example output as XML
+## Calling example output as XSLX
 
 You must have set your environment variables before starting the container.
 
