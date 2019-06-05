@@ -7,7 +7,7 @@ It is a Python code that was gotten from [Quick start with OCR SDK for Python](h
 
 This is not an asynchronous code, so it hangs a little bit waiting a return from the **ABBY Cloud**.
 
-***IMPORTANT:*** The are a bunch of API methods available but this code takes care only of [processImage](https://www.ocrsdk.com/documentation/api-reference/process-image-method) method.
+***IMPORTANT:*** The are a bunch of API methods available but this code takes care only of [processImage](https://www.ocrsdk.com/documentation/api-reference/process-image-method) method and [processTextField](https://www.ocrsdk.com/documentation/api-reference/process-text-field-method/).
 
 # Before Starting
 
@@ -18,7 +18,7 @@ After creating your account, create an application and save its name. A password
 After cloning this repository, being on the main folder, run:<br/>
 
 ```bash
-docker build -t abbyy-process-image .
+docker build -t abbyy-ocr-process .
 ```
 
 # Running the Image
@@ -44,7 +44,16 @@ There are optional arguments that can be sent with shortcut letters, as follows:
 | --- | --- |
 | -l<br/>or<br/>--language | Specifies the recognition language. *Default: English*<br/>[Supported languages](https://www.ocrsdk.com/documentation/specifications/recognition-languages) |
 
-The following arguments represent a mutual exclusive group and just one of them can be used, and in fact, must be used for processing the OCR request.
+The following arguments represent a mutual exclusive group and just one of them can be used, and in fact, must be used for choosing which API method should be used: **processImage** or **processTextField**
+
+| Optional Argument | Description | 
+| --- | --- |
+| -image<br/>*This is DEFAULT.* | Specifies the operation as **image** which calls the [processImage](https://www.ocrsdk.com/documentation/api-reference/process-image-method) API method. |
+| -textField | Specifies the operation as **textField** which calls the [processTextField](https://www.ocrsdk.com/documentation/api-reference/process-text-field-method/) API method. |
+
+### **processImage** - Optional Arguments
+
+The following arguments represent a mutual exclusive group and just one of them can be used, and in fact, must be used for processing the OCR request through **processImage** API method.
 
 | Optional Argument | Description | 
 | --- | --- |
@@ -60,9 +69,28 @@ The following arguments represent a mutual exclusive group and just one of them 
 | -xml | Exports the result into **XML** format. |
 | <nobr>-xmlForCorrectedImage</nobr> | The same as xml, but all coordinates written into the output **XML** file relate to the corrected image, not the original. |
 
-## Calling example output as XSLX
+### **processTextField** - Optional Arguments
+
+The following arguments represent a mutual exclusive group and just one of them can be used, and in fact, must be used for processing the OCR request through **processTextField** API method.
+
+| Optional Argument | Description | 
+| --- | --- |
+| -allTextTypes<br/>*This is DEFAULT.*| Specifies [text type](https://www.ocrsdk.com/documentation/specifications/text-types/) as ***normal,typewriter,matrix,index,ocrA,ocrB,e13b,cmc7,gothic*** to be used by **processTextField** API method. |
+| -normal | Specifies [text type](https://www.ocrsdk.com/documentation/specifications/text-types/) as ***normal*** to be used by **processTextField** API method. |
+| -typewriter | Specifies [text type](https://www.ocrsdk.com/documentation/specifications/text-types/) as ***typewriter*** to be used by **processTextField** API method. |
+| -matrix | Specifies [text type](https://www.ocrsdk.com/documentation/specifications/text-types/) as ***matrix*** to be used by **processTextField** API method. |
+| -index | Specifies [text type](https://www.ocrsdk.com/documentation/specifications/text-types/) as ***index*** to be used by **processTextField** API method. |
+| -ocrA | Specifies [text type](https://www.ocrsdk.com/documentation/specifications/text-types/) as ***ocrA*** to be used by **processTextField** API method. |
+| -ocrB | Specifies [text type](https://www.ocrsdk.com/documentation/specifications/text-types/) as ***ocrB*** to be used by **processTextField** API method. |
+| -e13b | Specifies [text type](https://www.ocrsdk.com/documentation/specifications/text-types/) as ***e13b*** to be used by **processTextField** API method. |
+| -cmc7 | Specifies [text type](https://www.ocrsdk.com/documentation/specifications/text-types/) as ***cmc7*** to be used by **processTextField** API method. |
+| -gothic | Specifies [text type](https://www.ocrsdk.com/documentation/specifications/text-types/) as ***gothic*** to be used by **processTextField** API method. |
+
+## Examples
 
 You must have set your environment variables before starting the container.
+
+### **processImage** API with output as XSLX
 
 The following example, code below is for Linux, submits all files inside input folder, of host that is mapped to container, and request its return to be a **XLSX** using **Brazilian Portuguese** as the recognition language.
 
@@ -74,6 +102,22 @@ docker run -e ABBYY_SERVER_URL="$ABBYY_SERVER_URL" \
             -e ABBYY_PWD="$ABBYY_PWD" \
             -v $(pwd)/input:/usr/app/input \
             -v $(pwd)/output:/usr/app/output \
-            ricardosouzamorais/abbyy-process-image \
+            ricardosouzamorais/abbyy-ocr-process \
             -l "PortugueseBrazilian" -xlsx
+```
+
+### **processTextField** API
+
+The following example, code below is for Linux, submits all files inside input folder, of host that is mapped to container, and request its return to be an **XML** (only available output format for this API method) using **Brazilian Portuguese** as the recognition language.
+
+Run the following:
+
+```bash
+docker run -e ABBYY_SERVER_URL="$ABBYY_SERVER_URL" \
+            -e ABBYY_APPID="$ABBYY_APPID" \
+            -e ABBYY_PWD="$ABBYY_PWD" \
+            -v $(pwd)/input:/usr/app/input \
+            -v $(pwd)/output:/usr/app/output \
+            ricardosouzamorais/abbyy-ocr-process \
+            -l "PortugueseBrazilian" -textField
 ```

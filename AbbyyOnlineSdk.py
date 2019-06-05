@@ -15,8 +15,10 @@ except ImportError:
 
 
 class ProcessingSettings:
-	Language = "English"
+	Language     = "English"
+	Operation    = "processImage"
 	OutputFormat = "docx"
+	TextType     = "normal,typewriter,matrix,index,ocrA,ocrB,e13b,cmc7,gothic"
 
 
 class Task:
@@ -44,12 +46,21 @@ class AbbyyOnlineSdk:
 	Password = "password"
 	Proxies = {}
 
-	def process_image(self, file_path, settings):
-		url_params = {
-			"language": settings.Language,
-			"exportFormat": settings.OutputFormat
-		}
-		request_url = self.get_request_url("processImage")
+	def process(self, file_path, settings):
+
+		url_params  = None
+		if settings.Operation == 'processTextField':
+			url_params = {
+				"language": settings.Language,
+				"textType": settings.TextType,
+			}
+		else:
+			url_params = {
+				"language": settings.Language,
+				"exportFormat": settings.OutputFormat
+			}
+
+		request_url = self.get_request_url(settings.Operation)
 
 		with open(file_path, 'rb') as image_file:
 			image_data = image_file.read()
